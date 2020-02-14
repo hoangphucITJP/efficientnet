@@ -37,6 +37,7 @@ from six.moves import xrange
 from keras_applications.imagenet_utils import _obtain_input_shape
 from keras_applications.imagenet_utils import decode_predictions
 from keras_applications.imagenet_utils import preprocess_input as _preprocess_input
+import tensorflow_addons as tfa
 
 from . import get_submodules_from_kwargs
 
@@ -154,6 +155,10 @@ def get_swish(**kwargs):
 
         return x * backend.sigmoid(x)
     return  swish
+
+
+def get_mish(**kwargs):
+    return tfa.activations.mish
 
 
 def get_dropout(**kwargs):
@@ -377,7 +382,7 @@ def EfficientNet(width_coefficient,
             img_input = input_tensor
 
     bn_axis = 3 if backend.image_data_format() == 'channels_last' else 1
-    activation = get_swish(**kwargs)
+    activation = get_mish(**kwargs)
 
     # Build stem
     x = img_input
